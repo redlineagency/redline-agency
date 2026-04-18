@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REDLINE Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #E8001D;
+  --red-dark: #9E0014;
+  --red-glow: rgba(232,0,29,0.3);
+  --black: #080808;
+  --black2: #111111;
+  --black3: #1a1a1a;
+  --white: #F5F5F5;
+  --gray: #888;
+  --gray2: #333;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Montserrat', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  width: 12px; height: 12px;
+  background: var(--red);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s;
+}
+.cursor-follower {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--red);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: all 0.15s ease;
+  opacity: 0.6;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--red); }
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.4;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 60px;
+  background: linear-gradient(180deg, rgba(8,8,8,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: var(--white);
+}
+.logo span { color: var(--red); }
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--gray);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--red);
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-cta {
+  background: var(--red);
+  color: var(--white) !important;
+  padding: 10px 24px;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s !important;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.nav-cta:hover { background: var(--red-dark); transform: scale(1.05); }
+.nav-cta::after { display: none !important; }
+
+/* LANGUAGE SWITCHER */
+.lang-switch {
+  display: flex;
+  gap: 8px;
+}
+.lang-btn {
+  background: none;
+  border: 1px solid var(--gray2);
+  color: var(--gray);
+  padding: 4px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: none;
+  transition: all 0.3s;
+  font-family: 'Montserrat', sans-serif;
+}
+.lang-btn.active, .lang-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 0 60px;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 60% at 70% 50%, rgba(232,0,29,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(232,0,29,0.05) 0%, transparent 60%);
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232,0,29,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,0,29,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+}
+
+.hero-line {
+  position: absolute;
+  left: 0; top: 50%;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  opacity: 0.2;
+  animation: scanline 4s ease-in-out infinite;
+}
+@keyframes scanline {
+  0%, 100% { top: 20%; opacity: 0; }
+  50% { top: 80%; opacity: 0.3; }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--red);
+  padding: 6px 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 32px;
+  animation: fadeInUp 0.8s ease both;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 10vw, 140px);
+  line-height: 0.9;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  animation: fadeInUp 0.8s ease 0.1s both;
+}
+.hero-title .red { color: var(--red); position: relative; }
+.hero-title .red::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 3px; top: 3px;
+  color: var(--red-dark);
+  z-index: -1;
+  opacity: 0.5;
+}
+
+.hero-subtitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(36px, 5vw, 72px);
+  color: var(--gray);
+  letter-spacing: 8px;
+  margin-bottom: 32px;
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.hero-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.8;
+  max-width: 500px;
+  margin-bottom: 48px;
+  animation: fadeInUp 0.8s ease 0.3s both;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.btn-primary {
+  background: var(--red);
+  color: var(--white);
+  padding: 16px 40px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+  transform: translateX(-100%);
+  transition: transform 0.3s;
+  opacity: 0.1;
+}
+.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary:hover { box-shadow: 0 0 40px var(--red-glow); }
+
+.btn-secondary {
+  border: 1px solid var(--gray2);
+  color: var(--white);
+  padding: 16px 40px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-secondary:hover { border-color: var(--red); color: var(--red); }
+
+.hero-stats {
+  position: absolute;
+  right: 60px;
+  bottom: 80px;
+  display: flex;
+  gap: 60px;
+  animation: fadeInUp 0.8s ease 0.5s both;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  color: var(--red);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gray);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gray);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: fadeInUp 1s ease 0.8s both;
+}
+.scroll-line {
+  width: 60px; height: 1px;
+  background: var(--gray2);
+  position: relative;
+  overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--red);
+  animation: scrollAnim 2s ease-in-out infinite;
+}
+@keyframes scrollAnim {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* MARQUEE */
+.marquee-section {
+  padding: 20px 0;
+  background: var(--red);
+  overflow: hidden;
+  position: relative;
+}
+.marquee-track {
+  display: flex;
+  gap: 0;
+  animation: marquee 20s linear infinite;
+  white-space: nowrap;
+}
+.marquee-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.8);
+  padding: 0 40px;
+  border-right: 1px solid rgba(255,255,255,0.3);
+}
+.marquee-item span { color: white; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* SERVICES */
+.services {
+  padding: 120px 60px;
+  position: relative;
+}
+
+.section-header {
+  margin-bottom: 80px;
+}
+.section-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-tag::before {
+  content: '';
+  width: 30px; height: 1px;
+  background: var(--red);
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: 2px;
+}
+.section-title .outline {
+  -webkit-text-stroke: 1px var(--gray2);
+  color: transparent;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--gray2);
+}
+
+.service-card {
+  background: var(--black2);
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s;
+  cursor: none;
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 2px;
+  background: var(--red);
+  transition: width 0.4s;
+}
+.service-card:hover { background: var(--black3); transform: translateY(-4px); }
+.service-card:hover::before { width: 100%; }
+
+.service-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 72px;
+  color: var(--gray2);
+  line-height: 1;
+  margin-bottom: 24px;
+  transition: color 0.3s;
+}
+.service-card:hover .service-num { color: var(--red); opacity: 0.3; }
+
+.service-icon {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.service-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.service-desc {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.service-list {
+  margin-top: 20px;
+  list-style: none;
+}
+.service-list li {
+  font-size: 12px;
+  color: var(--gray);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--gray2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.service-list li::before {
+  content: '—';
+  color: var(--red);
+  font-size: 10px;
+}
+
+.service-arrow {
+  position: absolute;
+  bottom: 30px; right: 30px;
+  width: 40px; height: 40px;
+  border: 1px solid var(--gray2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+  font-size: 18px;
+  transition: all 0.3s;
+}
+.service-card:hover .service-arrow {
+  background: var(--red);
+  border-color: var(--red);
+  color: white;
+}
+
+/* PRICING */
+.pricing {
+  padding: 120px 60px;
+  background: var(--black2);
+  position: relative;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.price-card {
+  border: 1px solid var(--gray2);
+  padding: 48px 36px;
+  position: relative;
+  transition: all 0.4s;
+  cursor: none;
+}
+.price-card:hover {
+  border-color: var(--red);
+  box-shadow: 0 0 60px rgba(232,0,29,0.1);
+}
+.price-card.featured {
+  border-color: var(--red);
+  background: linear-gradient(135deg, rgba(232,0,29,0.05) 0%, transparent 100%);
+}
+
+.featured-badge {
+  position: absolute;
+  top: -1px; right: 30px;
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 6px 16px;
+  text-transform: uppercase;
+}
+
+.price-tier {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.price-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.price-amount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--red);
+  margin: 24px 0;
+}
+.price-amount span {
+  font-size: 20px;
+  color: var(--gray);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+}
+.price-desc {
+  font-size: 12px;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  font-weight: 300;
+}
+.price-features {
+  list-style: none;
+  margin-bottom: 40px;
+}
+.price-features li {
+  font-size: 12px;
+  color: var(--gray);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.price-features li .check { color: var(--red); font-weight: 700; }
+
+.btn-price {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: 1px solid var(--gray2);
+  color: var(--white);
+}
+.price-card.featured .btn-price {
+  background: var(--red);
+  border-color: var(--red);
+}
+.btn-price:hover { background: var(--red); border-color: var(--red); }
+
+/* PORTFOLIO */
+.portfolio {
+  padding: 120px 60px;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 60px;
+}
+
+.portfolio-item {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--black3);
+  cursor: none;
+}
+.portfolio-item:first-child {
+  grid-column: span 2;
+  aspect-ratio: auto;
+}
+
+.portfolio-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+  opacity: 0.05;
+  transition: all 0.4s;
+}
+.portfolio-item:hover .portfolio-bg {
+  transform: scale(1.2);
+  opacity: 0.08;
+}
+
+.portfolio-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(8,8,8,0.95) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 30px;
+  transform: translateY(20px);
+  transition: transform 0.4s;
+}
+.portfolio-item:hover .portfolio-overlay { transform: translateY(0); }
+
+.portfolio-cat {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.portfolio-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+.portfolio-accent {
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 0;
+  background: var(--red);
+  transition: height 0.4s;
+}
+.portfolio-item:hover .portfolio-accent { height: 100%; }
+
+/* WHY US */
+.why-us {
+  padding: 120px 60px;
+  background: var(--black2);
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 60px;
+}
+
+.why-visual {
+  position: relative;
+  height: 500px;
+}
+
+.why-main-box {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--gray2);
+  background: var(--black3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 120px;
+  color: var(--red);
+  opacity: 0.15;
+}
+
+.why-stat-box {
+  position: absolute;
+  background: var(--black);
+  border: 1px solid var(--gray2);
+  padding: 24px 28px;
+}
+.why-stat-box:nth-child(2) { top: 20px; right: -20px; border-color: var(--red); }
+.why-stat-box:nth-child(3) { bottom: 40px; left: -20px; }
+.why-stat-box:nth-child(4) { bottom: 40px; right: 40px; }
+
+.why-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  color: var(--red);
+  line-height: 1;
+}
+.why-stat-text {
+  font-size: 11px;
+  color: var(--gray);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.why-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.why-item {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--gray2);
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  transition: all 0.3s;
+  cursor: none;
+}
+.why-item:hover { padding-left: 12px; }
+
+.why-item-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: var(--red);
+  opacity: 0.4;
+  min-width: 50px;
+  line-height: 1;
+}
+.why-item:hover .why-item-num { opacity: 1; }
+
+.why-item-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.why-item-desc {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* PROCESS */
+.process {
+  padding: 120px 60px;
+}
+
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 60px;
+  position: relative;
+}
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 40px; left: 0; right: 0;
+  height: 1px;
+  background: var(--gray2);
+}
+
+.process-step {
+  padding: 0 30px;
+  padding-top: 80px;
+  position: relative;
+  border-left: 1px solid var(--gray2);
+}
+.process-step:first-child { border-left: none; padding-left: 0; }
+
+.step-dot {
+  position: absolute;
+  top: 32px; left: -8px;
+  width: 16px; height: 16px;
+  background: var(--black2);
+  border: 2px solid var(--gray2);
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+.process-step:hover .step-dot {
+  background: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 0 20px var(--red-glow);
+}
+.process-step:first-child .step-dot { left: -8px; }
+
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  color: var(--gray2);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.step-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.step-desc {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* CONTACT */
+.contact {
+  padding: 120px 60px;
+  background: var(--black2);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact::before {
+  content: 'REDLINE';
+  position: absolute;
+  bottom: -20px; right: -20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 200px;
+  color: var(--red);
+  opacity: 0.03;
+  letter-spacing: 10px;
+  pointer-events: none;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+  margin-top: 60px;
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--gray2);
+}
+.contact-icon {
+  width: 44px; height: 44px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.contact-info-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.contact-info-value {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.form-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--gray);
+  text-transform: uppercase;
+}
+.form-input, .form-textarea, .form-select {
+  background: var(--black3);
+  border: 1px solid var(--gray2);
+  color: var(--white);
+  padding: 14px 18px;
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  transition: border-color 0.3s;
+  outline: none;
+  cursor: none;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  border-color: var(--red);
+}
+.form-textarea { resize: vertical; min-height: 120px; }
+.form-select option { background: var(--black3); }
+
+.btn-submit {
+  background: var(--red);
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: none;
+  transition: all 0.3s;
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  font-family: 'Montserrat', sans-serif;
+  align-self: flex-start;
+}
+.btn-submit:hover { background: var(--red-dark); box-shadow: 0 0 40px var(--red-glow); }
+
+/* SOCIAL */
+.social-bar {
+  padding: 60px;
+  border-top: 1px solid var(--gray2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.social-links {
+  display: flex;
+  gap: 16px;
+}
+.social-link {
+  width: 44px; height: 44px;
+  border: 1px solid var(--gray2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  text-decoration: none;
+  color: var(--gray);
+  transition: all 0.3s;
+}
+.social-link:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* FOOTER */
+footer {
+  padding: 30px 60px;
+  border-top: 1px solid var(--gray2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--black);
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 4px;
+}
+.footer-logo span { color: var(--red); }
+.footer-copy {
+  font-size: 11px;
+  color: var(--gray);
+  letter-spacing: 1px;
+}
+.footer-tagline {
+  font-size: 10px;
+  color: var(--gray);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* LANGUAGE CONTENT */
+.lang-content { display: none; }
+.lang-content.active { display: block; }
+.lang-inline { display: none; }
+.lang-inline.active { display: inline; }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  nav { padding: 20px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 80px; }
+  .hero-stats { position: static; flex-direction: row; gap: 30px; margin-top: 48px; }
+  .scroll-indicator { display: none; }
+  .services, .pricing, .portfolio, .why-us, .process, .contact { padding: 80px 24px; }
+  .services-grid, .pricing-grid { grid-template-columns: 1fr; }
+  .portfolio-grid { grid-template-columns: 1fr; }
+  .portfolio-item:first-child { grid-column: span 1; aspect-ratio: 4/3; }
+  .why-grid { grid-template-columns: 1fr; }
+  .why-visual { height: 200px; }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .social-bar, footer { flex-direction: column; gap: 20px; text-align: center; padding: 40px 24px; }
+  .lang-switch { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="follower"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">RED<span>LINE</span></div>
+  <ul class="nav-links">
+    <li><a href="#services" class="lang-nav-services">Xizmatlar</a></li>
+    <li><a href="#pricing" class="lang-nav-pricing">Narxlar</a></li>
+    <li><a href="#portfolio" class="lang-nav-portfolio">Portfolio</a></li>
+    <li><a href="#contact" class="lang-nav-contact">Aloqa</a></li>
+    <li><a href="#contact" class="nav-cta lang-nav-cta">Buyurtma</a></li>
+  </ul>
+  <div class="lang-switch">
+    <button class="lang-btn active" onclick="setLang('uz')">UZ</button>
+    <button class="lang-btn" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="lang-content active" id="uz-badge">Reklama & Kreativ Agentlik</span>
+      <span class="lang-content" id="ru-badge">Рекламное & Креативное Агентство</span>
+      <span class="lang-content" id="en-badge">Advertising & Creative Agency</span>
+    </div>
+
+    <h1 class="hero-title">
+      <span class="red" data-text="RED">RED</span><br>
+      <span>LINE</span>
+    </h1>
+    <div class="hero-subtitle">AGENCY</div>
+
+    <p class="hero-desc" id="hero-desc-uz">
+      Sizning biznesingizni raqamli dunyoda kuchli qilamiz. SMM, reklama, dizayn, video — hammasi bir joyda.
+    </p>
+    <p class="hero-desc" id="hero-desc-ru" style="display:none">
+      Делаем ваш бизнес мощным в цифровом мире. SMM, реклама, дизайн, видео — всё в одном месте.
+    </p>
+    <p class="hero-desc" id="hero-desc-en" style="display:none">
+      We make your business powerful in the digital world. SMM, advertising, design, video — all in one place.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary" id="hero-btn1-uz">Loyiha Boshlash</a>
+      <a href="#services" class="btn-secondary" id="hero-btn2-uz">Xizmatlar →</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">200+</div>
+      <div class="stat-label" id="stat1-uz">Mijozlar</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">500+</div>
+      <div class="stat-label" id="stat2-uz">Loyihalar</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3+</div>
+      <div class="stat-label" id="stat3-uz">Yil Tajriba</div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span id="scroll-text-uz">Pastga suring</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marquee-track">
+    <div class="marquee-item">SMM MARKETING</div>
+    <div class="marquee-item">REKLAMA</div>
+    <div class="marquee-item">LOGO DIZAYN</div>
+    <div class="marquee-item">VIDEO MONTAJ</div>
+    <div class="marquee-item">VIDEO OLISH</div>
+    <div class="marquee-item">KONTENT YARATISH</div>
+    <div class="marquee-item">TARGETOLOG</div>
+    <div class="marquee-item">SMM MARKETING</div>
+    <div class="marquee-item">REKLAMA</div>
+    <div class="marquee-item">LOGO DIZAYN</div>
+    <div class="marquee-item">VIDEO MONTAJ</div>
+    <div class="marquee-item">VIDEO OLISH</div>
+    <div class="marquee-item">KONTENT YARATISH</div>
+    <div class="marquee-item">TARGETOLOG</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-header">
+    <div class="section-tag" id="srv-tag-uz">Nima qilamiz</div>
+    <h2 class="section-title">
+      <span id="srv-title1-uz">XIZMATLAR</span><br>
+      <span class="outline" id="srv-title2-uz">& YECHIMLAR</span>
+    </h2>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-icon">📢</div>
+      <div class="service-name" id="s1-name-uz">REKLAMA</div>
+      <p class="service-desc" id="s1-desc-uz">Telegram, Instagram, TikTok kanallaringizda professional reklama kampaniyalari.</p>
+      <ul class="service-list">
+        <li id="s1-l1-uz">Telegram kanallar</li>
+        <li id="s1-l2-uz">Instagram / TikTok</li>
+        <li id="s1-l3-uz">Maqsadli auditoriya</li>
+        <li id="s1-l4-uz">Hisobot va tahlil</li>
+      </ul>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-icon">📊</div>
+      <div class="service-name" id="s2-name-uz">SMM</div>
+      <p class="service-desc" id="s2-desc-uz">Ijtimoiy tarmoqlaringizni professional boshqaramiz va auditoriyangizni o'stiramiz.</p>
+      <ul class="service-list">
+        <li id="s2-l1-uz">Kontent strategiya</li>
+        <li id="s2-l2-uz">Kunlik postlar</li>
+        <li id="s2-l3-uz">Auditoriya o'stirish</li>
+        <li id="s2-l4-uz">Analytics</li>
+      </ul>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-icon">🎨</div>
+      <div class="service-name" id="s3-name-uz">DIZAYN</div>
+      <p class="service-desc" id="s3-desc-uz">Logo, banner, post va brendingiz uchun barcha dizayn xizmatlari.</p>
+      <ul class="service-list">
+        <li id="s3-l1-uz">Logo & Brending</li>
+        <li id="s3-l2-uz">Banner & Post</li>
+        <li id="s3-l3-uz">Vizitka & Buklet</li>
+        <li id="s3-l4-uz">UI Dizayn</li>
+      </ul>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-icon">🎬</div>
+      <div class="service-name" id="s4-name-uz">VIDEO MONTAJ</div>
+      <p class="service-desc" id="s4-desc-uz">Professional video montaj — Reels, Shorts, reklama va korporativ videolar.</p>
+      <ul class="service-list">
+        <li id="s4-l1-uz">Reels & Shorts</li>
+        <li id="s4-l2-uz">Reklama videolari</li>
+        <li id="s4-l3-uz">Motion grafika</li>
+        <li id="s4-l4-uz">Subtitrlar</li>
+      </ul>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-icon">📹</div>
+      <div class="service-name" id="s5-name-uz">VIDEO OLISH</div>
+      <p class="service-desc" id="s5-desc-uz">Professional kamera va jihozlar bilan mahsulot, korporativ va reklama videolarini olamiz.</p>
+      <ul class="service-list">
+        <li id="s5-l1-uz">Mahsulot videolari</li>
+        <li id="s5-l2-uz">Korporativ shooting</li>
+        <li id="s5-l3-uz">Reklama rolliklari</li>
+        <li id="s5-l4-uz">Drone shooting</li>
+      </ul>
+      <div class="service-arrow">→</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-icon">🎯</div>
+      <div class="service-name" id="s6-name-uz">TARGETOLOG</div>
+      <p class="service-desc" id="s6-desc-uz">Meta Ads, Google Ads orqali maqsadli reklama — maksimal ROI kafolati bilan.</p>
+      <ul class="service-list">
+        <li id="s6-l1-uz">Meta Ads (FB/IG)</li>
+        <li id="s6-l2-uz">Google Ads</li>
+        <li id="s6-l3-uz">TikTok Ads</li>
+        <li id="s6-l4-uz">ROI tahlili</li>
+      </ul>
+      <div class="service-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-header">
+    <div class="section-tag" id="pr-tag-uz">Shaffof narxlar</div>
+    <h2 class="section-title">
+      <span id="pr-title1-uz">NARXLAR</span><br>
+      <span class="outline" id="pr-title2-uz">& PAKETLAR</span>
+    </h2>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier" id="pt1-uz">Boshlang'ich</div>
+      <div class="price-name" id="pn1-uz">STARTER</div>
+      <p class="price-desc" id="pd1-uz">Kichik biznes va individual tadbirkorlar uchun ideal paket.</p>
+      <div class="price-amount">500K <span id="pcur1-uz">so'm/oy</span></div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> <span id="pf1-1-uz">10 ta post oyiga</span></li>
+        <li><span class="check">✓</span> <span id="pf1-2-uz">2 ta reklama kanali</span></li>
+        <li><span class="check">✓</span> <span id="pf1-3-uz">1 ta logo dizayn</span></li>
+        <li><span class="check">✓</span> <span id="pf1-4-uz">Oylik hisobot</span></li>
+        <li><span class="check" style="color:var(--gray2)">✗</span> <span style="color:var(--gray2)" id="pf1-5-uz">Video xizmatlari</span></li>
+      </ul>
+      <a href="#contact" class="btn-price" id="pb1-uz">Tanlash</a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="featured-badge" id="fb-uz">Mashhur</div>
+      <div class="price-tier" id="pt2-uz">Professional</div>
+      <div class="price-name" id="pn2-uz">PRO</div>
+      <p class="price-desc" id="pd2-uz">O'rta biznes uchun to'liq SMM va reklama yechimi.</p>
+      <div class="price-amount">1.5M <span id="pcur2-uz">so'm/oy</span></div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> <span id="pf2-1-uz">30 ta post oyiga</span></li>
+        <li><span class="check">✓</span> <span id="pf2-2-uz">5 ta reklama kanali</span></li>
+        <li><span class="check">✓</span> <span id="pf2-3-uz">To'liq dizayn paketi</span></li>
+        <li><span class="check">✓</span> <span id="pf2-4-uz">2 ta montaj video</span></li>
+        <li><span class="check">✓</span> <span id="pf2-5-uz">Targetolog xizmati</span></li>
+      </ul>
+      <a href="#contact" class="btn-price" id="pb2-uz">Tanlash</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-tier" id="pt3-uz">Korporativ</div>
+      <div class="price-name" id="pn3-uz">ENTERPRISE</div>
+      <p class="price-desc" id="pd3-uz">Yirik biznes va brendlar uchun maxsus individual yechim.</p>
+      <div class="price-amount" style="font-size:40px; padding-top:12px" id="pa3-uz">Muzokarali</div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> <span id="pf3-1-uz">Cheksiz postlar</span></li>
+        <li><span class="check">✓</span> <span id="pf3-2-uz">Barcha kanallar</span></li>
+        <li><span class="check">✓</span> <span id="pf3-3-uz">To'liq brending</span></li>
+        <li><span class="check">✓</span> <span id="pf3-4-uz">Video production</span></li>
+        <li><span class="check">✓</span> <span id="pf3-5-uz">Shaxsiy menejer</span></li>
+      </ul>
+      <a href="#contact" class="btn-price" id="pb3-uz">Muzokaraga</a>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="portfolio">
+  <div class="section-header">
+    <div class="section-tag" id="port-tag-uz">Bizning ishlar</div>
+    <h2 class="section-title">
+      <span id="port-title1-uz">PORTFOLIO</span><br>
+      <span class="outline" id="port-title2-uz">& NATIJALAR</span>
+    </h2>
+  </div>
+
+  <div class="portfolio-grid">
+    <div class="portfolio-item">
+      <div class="portfolio-bg">🎬</div>
+      <div class="portfolio-accent"></div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat" id="pc1-uz">Video Production</div>
+        <div class="portfolio-title" id="pt1p-uz">KORPORATIV VIDEO LOYIHA</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-bg">🎨</div>
+      <div class="portfolio-accent"></div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat" id="pc2-uz">Brending</div>
+        <div class="portfolio-title" id="pt2p-uz">LOGO & BRENDING</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-bg">📊</div>
+      <div class="portfolio-accent"></div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat" id="pc3-uz">SMM</div>
+        <div class="portfolio-title" id="pt3p-uz">IJTIMOIY TARMOQLAR</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-bg">📢</div>
+      <div class="portfolio-accent"></div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat" id="pc4-uz">Reklama</div>
+        <div class="portfolio-title" id="pt4p-uz">REKLAMA KAMPANIYA</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-bg">🎯</div>
+      <div class="portfolio-accent"></div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat" id="pc5-uz">Targeting</div>
+        <div class="portfolio-title" id="pt5p-uz">META ADS KAMPANIYA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-us" id="about">
+  <div class="section-header">
+    <div class="section-tag" id="why-tag-uz">Nima uchun biz</div>
+    <h2 class="section-title">
+      <span id="why-title1-uz">AFZALLIKLARIMIZ</span><br>
+      <span class="outline" id="why-title2-uz">& TAJRIBAMIZ</span>
+    </h2>
+  </div>
+
+  <div class="why-grid">
+    <div class="why-visual">
+      <div class="why-main-box">RL</div>
+      <div class="why-stat-box">
+        <div class="why-stat-num">98%</div>
+        <div class="why-stat-text" id="ws1-uz">Mijozlar mamnuniyati</div>
+      </div>
+      <div class="why-stat-box">
+        <div class="why-stat-num">3x</div>
+        <div class="why-stat-text" id="ws2-uz">O'rtacha o'sish</div>
+      </div>
+      <div class="why-stat-box">
+        <div class="why-stat-num">24h</div>
+        <div class="why-stat-text" id="ws3-uz">Javob vaqti</div>
+      </div>
+    </div>
+
+    <div class="why-items">
+      <div class="why-item">
+        <div class="why-item-num">01</div>
+        <div>
+          <div class="why-item-title" id="wi1-title-uz">PROFESSIONAL JAMOA</div>
+          <p class="why-item-desc" id="wi1-desc-uz">Har bir xodimimiz o'z sohasida 3+ yillik tajribaga ega mutaxassis.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-num">02</div>
+        <div>
+          <div class="why-item-title" id="wi2-title-uz">NATIJA KAFOLATI</div>
+          <p class="why-item-desc" id="wi2-desc-uz">Har bir loyiha uchun aniq KPI va o'lchov ko'rsatkichlari belgilaymiz.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-num">03</div>
+        <div>
+          <div class="why-item-title" id="wi3-title-uz">TEZKOR YETKAZIB BERISH</div>
+          <p class="why-item-desc" id="wi3-desc-uz">Loyihalaringizni belgilangan muddatda, sifat yo'qotmasdan yetkazamiz.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-num">04</div>
+        <div>
+          <div class="why-item-title" id="wi4-title-uz">SHAFFOF NARXLAR</div>
+          <p class="why-item-desc" id="wi4-desc-uz">Yashirin to'lovlar yo'q. Narxlar oldindan kelishiladi va o'zgarmaydi.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="section-header">
+    <div class="section-tag" id="proc-tag-uz">Qanday ishlaymiz</div>
+    <h2 class="section-title">
+      <span id="proc-title1-uz">JARAYON</span><br>
+      <span class="outline" id="proc-title2-uz">& BOSQICHLAR</span>
+    </h2>
+  </div>
+
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <div class="step-num">01</div>
+      <div class="step-title" id="ps1-title-uz">MUROJAAT</div>
+      <p class="step-desc" id="ps1-desc-uz">Biz bilan bog'laning. Biznesingiz haqida so'zlang, maqsadlaringizni ayting.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <div class="step-num">02</div>
+      <div class="step-title" id="ps2-title-uz">TAHLIL</div>
+      <p class="step-desc" id="ps2-desc-uz">Raqobatchilar va bozorni tahlil qilamiz, strategiya ishlab chiqamiz.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <div class="step-num">03</div>
+      <div class="step-title" id="ps3-title-uz">AMALGA OSHIRISH</div>
+      <p class="step-desc" id="ps3-desc-uz">Kelishilgan reja asosida ishni boshlaymiz va doimiy yangilab boramiz.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <div class="step-num">04</div>
+      <div class="step-title" id="ps4-title-uz">NATIJA</div>
+      <p class="step-desc" id="ps4-desc-uz">Natijalarni o'lchaymiz, hisobot beramiz va strategiyani takomillashtiramiz.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-header">
+    <div class="section-tag" id="con-tag-uz">Bog'laning</div>
+    <h2 class="section-title">
+      <span id="con-title1-uz">ALOQA</span><br>
+      <span class="outline" id="con-title2-uz">& BUYURTMA</span>
+    </h2>
+  </div>
+
+  <div class="contact-grid">
+    <div>
+      <div class="contact-info-item">
+        <div class="contact-icon">📱</div>
+        <div>
+          <div class="contact-info-label" id="cl1-uz">Telegram</div>
+          <div class="contact-info-value">@Xamza00004</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-info-label" id="cl2-uz">Telefon</div>
+          <div class="contact-info-value">+966 54 170 8615</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-info-label" id="cl3-uz">Manzil</div>
+          <div class="contact-info-value" id="cv3-uz">Toshkent, O'zbekiston</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">⏰</div>
+        <div>
+          <div class="contact-info-label" id="cl4-uz">Ish vaqti</div>
+          <div class="contact-info-value" id="cv4-uz">Du–Sha: 9:00 – 18:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-group">
+        <label class="form-label" id="fl1-uz">Ismingiz</label>
+        <input class="form-input" type="text" id="fi1-uz" placeholder="Ism Familiya">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="fl2-uz">Telefon</label>
+        <input class="form-input" type="tel" id="fi2-uz" placeholder="+998 90 000 00 00">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="fl3-uz">Xizmat</label>
+        <select class="form-select" id="fs-uz">
+          <option id="fo0-uz">Xizmat tanlang</option>
+          <option id="fo1-uz">Reklama</option>
+          <option id="fo2-uz">SMM</option>
+          <option id="fo3-uz">Dizayn</option>
+          <option id="fo4-uz">Video Montaj</option>
+          <option id="fo5-uz">Video Olish</option>
+          <option id="fo6-uz">Targetolog</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="fl4-uz">Xabar</label>
+        <textarea class="form-textarea" id="fta-uz" placeholder="Loyihangiz haqida yozing..."></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitForm()" id="fsb-uz">Yuborish →</button>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL BAR -->
+<div class="social-bar">
+  <div>
+    <div style="font-size:10px; color:var(--gray); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px" id="sl-title-uz">Bizni kuzating</div>
+    <div class="social-links">
+      <a href="https://t.me/Xamza00004" target="_blank" class="social-link" title="Telegram">✈️</a>
+      <a href="https://www.instagram.com/saudi_guy007" target="_blank" class="social-link" title="Instagram">📸</a>
+      <a href="#" class="social-link" title="TikTok">🎵</a>
+      <a href="#" class="social-link" title="YouTube">▶️</a>
+    </div>
+  </div>
+  <div style="text-align:center">
+    <div class="logo" style="font-size:24px; margin-bottom:8px">RED<span style="color:var(--red)">LINE</span></div>
+    <div style="font-size:10px; color:var(--gray); letter-spacing:2px" id="sl-slogan-uz">RAQAMLI KELAJAK UCHUN</div>
+  </div>
+  <a href="#contact" class="btn-primary" id="sl-cta-uz">Loyiha Boshlash →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">RED<span>LINE</span> AGENCY</div>
+  <div class="footer-copy" id="fc-uz">© 2024 REDLINE Agency. Barcha huquqlar himoyalangan.</div>
+  <div class="footer-tagline" id="ft-uz">PROFESSIONAL · TEZKOR · SIFATLI</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('follower');
+let mouseX = 0, mouseY = 0;
+let followerX = 0, followerY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top = mouseY + 'px';
+});
+
+function animateFollower() {
+  followerX += (mouseX - followerX) * 0.12;
+  followerY += (mouseY - followerY) * 0.12;
+  follower.style.left = followerX + 'px';
+  follower.style.top = followerY + 'px';
+  requestAnimationFrame(animateFollower);
+}
+animateFollower();
+
+document.querySelectorAll('a, button, .service-card, .price-card, .portfolio-item, .why-item, .process-step').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+    follower.style.transform = 'translate(-50%, -50%) scale(1.5)';
+    follower.style.borderColor = 'var(--red)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+    follower.style.transform = 'translate(-50%, -50%) scale(1)';
+    follower.style.borderColor = 'var(--red)';
+  });
+});
+
+// LANGUAGE SYSTEM
+const translations = {
+  uz: {
+    navServices: 'Xizmatlar', navPricing: 'Narxlar', navPortfolio: 'Portfolio',
+    navContact: 'Aloqa', navCta: 'Buyurtma',
+    heroBadge: 'Reklama & Kreativ Agentlik',
+    heroDesc: 'Sizning biznesingizni raqamli dunyoda kuchli qilamiz. SMM, reklama, dizayn, video — hammasi bir joyda.',
+    stat1: 'Mijozlar', stat2: 'Loyihalar', stat3: 'Yil Tajriba',
+    scroll: 'Pastga suring',
+    srvTag: 'Nima qilamiz', srvTitle1: 'XIZMATLAR', srvTitle2: '& YECHIMLAR',
+    s1: ['REKLAMA', 'Telegram, Instagram, TikTok kanallaringizda professional reklama kampaniyalari.', 'Telegram kanallar', 'Instagram / TikTok', 'Maqsadli auditoriya', 'Hisobot va tahlil'],
+    s2: ['SMM', 'Ijtimoiy tarmoqlaringizni professional boshqaramiz va auditoriyangizni o\'stiramiz.', 'Kontent strategiya', 'Kunlik postlar', 'Auditoriya o\'stirish', 'Analytics'],
+    s3: ['DIZAYN', 'Logo, banner, post va brendingiz uchun barcha dizayn xizmatlari.', 'Logo & Brending', 'Banner & Post', 'Vizitka & Buklet', 'UI Dizayn'],
+    s4: ['VIDEO MONTAJ', 'Professional video montaj — Reels, Shorts, reklama va korporativ videolar.', 'Reels & Shorts', 'Reklama videolari', 'Motion grafika', 'Subtitrlar'],
+    s5: ['VIDEO OLISH', 'Professional kamera va jihozlar bilan mahsulot, korporativ va reklama videolarini olamiz.', 'Mahsulot videolari', 'Korporativ shooting', 'Reklama rolliklari', 'Drone shooting'],
+    s6: ['TARGETOLOG', 'Meta Ads, Google Ads orqali maqsadli reklama — maksimal ROI kafolati bilan.', 'Meta Ads (FB/IG)', 'Google Ads', 'TikTok Ads', 'ROI tahlili'],
+    prTag: 'Shaffof narxlar', prTitle1: 'NARXLAR', prTitle2: '& PAKETLAR',
+    portTag: 'Bizning ishlar', portTitle1: 'PORTFOLIO', portTitle2: '& NATIJALAR',
+    whyTag: 'Nima uchun biz', whyTitle1: 'AFZALLIKLARIMIZ', whyTitle2: '& TAJRIBAMIZ',
+    procTag: 'Qanday ishlaymiz', procTitle1: 'JARAYON', procTitle2: '& BOSQICHLAR',
+    conTag: 'Bog\'laning', conTitle1: 'ALOQA', conTitle2: '& BUYURTMA',
+    submitBtn: 'Yuborish →',
+  },
+  ru: {
+    navServices: 'Услуги', navPricing: 'Цены', navPortfolio: 'Портфолио',
+    navContact: 'Контакты', navCta: 'Заказать',
+    heroBadge: 'Рекламное & Креативное Агентство',
+    heroDesc: 'Делаем ваш бизнес мощным в цифровом мире. SMM, реклама, дизайн, видео — всё в одном месте.',
+    stat1: 'Клиентов', stat2: 'Проектов', stat3: 'Лет опыта',
+    scroll: 'Прокрутите вниз',
+    srvTag: 'Что мы делаем', srvTitle1: 'УСЛУГИ', srvTitle2: '& РЕШЕНИЯ',
+    prTag: 'Прозрачные цены', prTitle1: 'ЦЕНЫ', prTitle2: '& ПАКЕТЫ',
+    portTag: 'Наши работы', portTitle1: 'ПОРТФОЛИО', portTitle2: '& РЕЗУЛЬТАТЫ',
+    whyTag: 'Почему мы', whyTitle1: 'ПРЕИМУЩЕСТВА', whyTitle2: '& ОПЫТ',
+    procTag: 'Как мы работаем', procTitle1: 'ПРОЦЕСС', procTitle2: '& ЭТАПЫ',
+    conTag: 'Свяжитесь', conTitle1: 'КОНТАКТЫ', conTitle2: '& ЗАКАЗ',
+    submitBtn: 'Отправить →',
+  },
+  en: {
+    navServices: 'Services', navPricing: 'Pricing', navPortfolio: 'Portfolio',
+    navContact: 'Contact', navCta: 'Order',
+    heroBadge: 'Advertising & Creative Agency',
+    heroDesc: 'We make your business powerful in the digital world. SMM, advertising, design, video — all in one place.',
+    stat1: 'Clients', stat2: 'Projects', stat3: 'Years Exp.',
+    scroll: 'Scroll down',
+    srvTag: 'What we do', srvTitle1: 'SERVICES', srvTitle2: '& SOLUTIONS',
+    prTag: 'Transparent pricing', prTitle1: 'PRICING', prTitle2: '& PACKAGES',
+    portTag: 'Our work', portTitle1: 'PORTFOLIO', portTitle2: '& RESULTS',
+    whyTag: 'Why us', whyTitle1: 'ADVANTAGES', whyTitle2: '& EXPERIENCE',
+    procTag: 'How we work', procTitle1: 'PROCESS', procTitle2: '& STEPS',
+    conTag: 'Get in touch', conTitle1: 'CONTACT', conTitle2: '& ORDER',
+    submitBtn: 'Send →',
+  }
+};
+
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+
+  const t = translations[lang];
+
+  // Nav
+  document.querySelector('.lang-nav-services').textContent = t.navServices;
+  document.querySelector('.lang-nav-pricing').textContent = t.navPricing;
+  document.querySelector('.lang-nav-portfolio').textContent = t.navPortfolio;
+  document.querySelector('.lang-nav-contact').textContent = t.navContact;
+  document.querySelector('.lang-nav-cta').textContent = t.navCta;
+
+  // Hero badge
+  document.getElementById('uz-badge').style.display = 'none';
+  document.getElementById('ru-badge').style.display = 'none';
+  document.getElementById('en-badge').style.display = 'none';
+  document.getElementById(`${lang}-badge`).style.display = 'inline';
+
+  // Hero desc
+  ['uz','ru','en'].forEach(l => document.getElementById(`hero-desc-${l}`).style.display = 'none');
+  document.getElementById(`hero-desc-${lang}`).style.display = 'block';
+
+  // Stats
+  document.getElementById('stat1-uz').textContent = t.stat1;
+  document.getElementById('stat2-uz').textContent = t.stat2;
+  document.getElementById('stat3-uz').textContent = t.stat3;
+
+  // Section tags
+  document.getElementById('srv-tag-uz').textContent = t.srvTag;
+  document.getElementById('srv-title1-uz').textContent = t.srvTitle1;
+  document.getElementById('srv-title2-uz').textContent = t.srvTitle2;
+  document.getElementById('pr-tag-uz').textContent = t.prTag;
+  document.getElementById('pr-title1-uz').textContent = t.prTitle1;
+  document.getElementById('pr-title2-uz').textContent = t.prTitle2;
+  document.getElementById('port-tag-uz').textContent = t.portTag;
+  document.getElementById('port-title1-uz').textContent = t.portTitle1;
+  document.getElementById('port-title2-uz').textContent = t.portTitle2;
+  document.getElementById('why-tag-uz').textContent = t.whyTag;
+  document.getElementById('why-title1-uz').textContent = t.whyTitle1;
+  document.getElementById('why-title2-uz').textContent = t.whyTitle2;
+  document.getElementById('proc-tag-uz').textContent = t.procTag;
+  document.getElementById('proc-title1-uz').textContent = t.procTitle1;
+  document.getElementById('proc-title2-uz').textContent = t.procTitle2;
+  document.getElementById('con-tag-uz').textContent = t.conTag;
+  document.getElementById('con-title1-uz').textContent = t.conTitle1;
+  document.getElementById('con-title2-uz').textContent = t.conTitle2;
+  document.getElementById('fsb-uz').textContent = t.submitBtn;
+
+  // Services
+  if (t.s1) {
+    for (let i = 1; i <= 6; i++) {
+      const s = t[`s${i}`];
+      if (s) {
+        document.getElementById(`s${i}-name-uz`).textContent = s[0];
+        document.getElementById(`s${i}-desc-uz`).textContent = s[1];
+        document.getElementById(`s${i}-l1-uz`).textContent = s[2];
+        document.getElementById(`s${i}-l2-uz`).textContent = s[3];
+        document.getElementById(`s${i}-l3-uz`).textContent = s[4];
+        document.getElementById(`s${i}-l4-uz`).textContent = s[5];
+      }
+    }
+  }
+}
+
+// SCROLL ANIMATIONS
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.service-card, .price-card, .portfolio-item, .why-item, .process-step').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+
+// FORM SUBMIT
+async function submitForm() {
+  const name = document.getElementById('fi1-uz').value.trim();
+  const phone = document.getElementById('fi2-uz').value.trim();
+  const service = document.getElementById('fs-uz').value.trim();
+  const msg = document.getElementById('fta-uz').value.trim();
+
+  if (!name || !phone) {
+    alert('❗ Ism va telefon raqamini kiriting!');
+    return;
+  }
+
+  const btn = document.getElementById('fsb-uz');
+  btn.textContent = 'Yuborilmoqda...';
+  btn.disabled = true;
+
+  const text = `🔔 *Yangi Zakaz — REDLINE Agency*\n\n👤 *Ism:* ${name}\n📞 *Telefon:* ${phone}\n🛠 *Xizmat:* ${service}\n💬 *Xabar:* ${msg || '—'}\n\n⏰ ${new Date().toLocaleString('uz-UZ')}`;
+
+  const BOT_TOKEN = '8704753455:AAFkJ-kNe3Z7nmPfvZpz-X9O5MszCLTiUQ4';
+  const CHAT_ID = '8196835770';
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: text,
+        parse_mode: 'Markdown'
+      })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      btn.textContent = '✅ Yuborildi!';
+      btn.style.background = '#1a8a1a';
+      document.getElementById('fi1-uz').value = '';
+      document.getElementById('fi2-uz').value = '';
+      document.getElementById('fta-uz').value = '';
+      setTimeout(() => {
+        btn.textContent = 'Yuborish →';
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 3000);
+    } else {
+      throw new Error('Telegram error');
+    }
+  } catch (e) {
+    btn.textContent = '❌ Xatolik! Qayta urinib ko\'ring';
+    btn.style.background = '#8a1a1a';
+    setTimeout(() => {
+      btn.textContent = 'Yuborish →';
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 3000);
+  }
+}
+
+// NAV SCROLL EFFECT
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 50) {
+    nav.style.background = 'rgba(8,8,8,0.98)';
+    nav.style.borderBottom = '1px solid #1a1a1a';
+  } else {
+    nav.style.background = 'linear-gradient(180deg, rgba(8,8,8,0.95) 0%, transparent 100%)';
+    nav.style.borderBottom = 'none';
+  }
+});
+</script>
+</body>
+</html>
